@@ -1,16 +1,23 @@
 Readme
 
-1. Network Installation
+Network Installation
+====================
+
+Run this scripts to install::
 
     wget -O - https://github.com/lhwork/vimrc/raw/master/install.sh | sh
 
 
-2. Local Installation
+Local Installation
+==================
+    
+1. Clone this repo::
 
     git clone git@github.com:lhwork/vimrc.git
 
-    cd vimrc
+2. Run local scripts to install::
 
+    cd vimrc
     sh local_install.sh
 
 
