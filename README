@@ -1,6 +1,16 @@
-lihuan's vimrc
+Readme
 
-vimrc installation
+1. Network Installation
 
-wget -O - https://github.com/lhwork/vimrc/raw/master/install.sh | sh
+    wget -O - https://github.com/lhwork/vimrc/raw/master/install.sh | sh
+
+
+2. Local Installation
+
+    git clone git@github.com:lhwork/vimrc.git
+
+    cd vimrc
+
+    sh local_install.sh
+
 
