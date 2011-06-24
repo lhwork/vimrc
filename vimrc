@@ -50,6 +50,10 @@ set fencs=utf-8,ucs-bom,shift-jis,gb18030,gbk,gb2312,cp936
 set helplang=cn
 set encoding=utf8 
 set langmenu=zh_CN.UTF-8 
+"文件编码设置
+set fileencodings=utf-8,gb2312,gbk,gb18030
+set termencoding=utf-8
+set fileformats=unix
 " 设置字体。
 set guifont=Liberation\Mono\ 12     
 " 命令行（在状态行下）的高度，默认为1，这里是2
@@ -98,7 +102,7 @@ if has("autocmd")
     autocmd FileType xml,html vmap <C-o> <ESC>'<i<!--<ESC>o<ESC>'>o-->
     autocmd FileType java,c,cpp,cs vmap <C-o> <ESC>'<o/*<ESC>'>o*/
     autocmd FileType html,text,php,vim,c,java,xml,bash,shell,perl,python setlocal textwidth=100
-    "autocmd Filetype html,xml,xsl source $VIMRUNTIME/plugin/closetag.vim
+    autocmd Filetype html,xml,xsl source ~/.vim/scripts/closetag.vim
     autocmd BufReadPost * 
     \ if line("'\"") > 0 && line("'\"") <= line("$") | 
     \   exe "normal g`\"" |
@@ -109,13 +113,23 @@ endif
 let s:PlugWinSize = 25
 
 " 快捷输入
-" 自动完成括号和引号
-inoremap ( ()<esc>:let leavechar=")"<cr>i
-inoremap [ []<esc>:let leavechar="]"<cr>i
-inoremap { {<esc>o}<esc>:let leavechar="}"<cr>0
-inoremap ' ''<esc>:let leavechar="'"<cr>i
-inoremap " ""<esc>:let leavechar='"'<cr>i
+" 自动补全括号和引号
+inoremap ( ()<ESC>i
+inoremap ) <c-r>=ClosePair(')')<CR>
+inoremap { {}<ESC>i
+inoremap } <c-r>=ClosePair('}')<CR>
+inoremap [ []<ESC>i
+inoremap ] <c-r>=ClosePair(']')<CR>
+inoremap < <><ESC>i
+inoremap > <c-r>=ClosePair('>')<CR>
 
+function ClosePair(char)
+    if getline('.')[col('.') - 1] == a:char
+        return "\<Right>"
+    else
+        return a:char
+    endif
+endf
 
 " 切换到正在编辑的文件目录
 map <leader>d :execute "cd" expand("%:h")<cr> 
