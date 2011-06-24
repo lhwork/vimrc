@@ -1,1 +1,6 @@
 lihuan's vimrc
+
+vimrc installation
+
+wget -O - https://github.com/lhwork/vimrc/raw/master/install.sh | sh
+
