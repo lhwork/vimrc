@@ -252,6 +252,9 @@ inoremap <C-e> <End>
 " Python 文件的一般设置，比如不要 tab 等    {{{
 autocmd FileType python set tabstop=4 shiftwidth=4 expandtab
 autocmd FileType python map <F12> :!python %<CR>
+autocmd FileType python map <buffer> <F3> :call Pep8()<CR>
+autocmd FileType python map <buffer> <F4> :call Pyflakes()<CR>
+autocmd BufWritePost *.py call Pyflakes()
 " }}}
 
 " vim 自动补全 Python 代码  {{{
