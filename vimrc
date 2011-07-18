@@ -3,14 +3,14 @@
 " author: Li Huan     <lhwork@hotmail.com>
 
 " ==========================================================================================
-" 全局配置  
+" 全局配置
 " ==========================================================================================
 filetype off
 call pathogen#helptags()
 call pathogen#runtime_append_all_bundles()
 filetype plugin indent on
 
-set nocompatible                "关掉兼容模式
+set nocompatible                " 关掉兼容模式
 syntax on                       " 语法高亮
 set mouse=a                     " 可以在buffer的任何地方使用鼠标（类似office中在工作区双击鼠标定位）
 set fileformats="unix,dos,mac"
@@ -28,7 +28,9 @@ set viminfo+=!                  " 保存全局变量
 set iskeyword+=_,$,@,%,#,-      " 带有如下符号的单词不要被换行分割
 set linespace=0                 " 字符间插入的像素行数目
 set selection=exclusive
-set selectmode=mouse,key                                     
+set selectmode=mouse,key
+set complete=.,w,b,k,t,i        " 自动完成
+set completeopt=longest,menu    " 只在下拉菜单中显示匹配项目，并且会自动插入所有匹配项目的相同文本
 
 filetype plugin on              " 载入文件类型插件
 filetype indent on              " 为特定文件类型载入相关缩进文件
@@ -42,36 +44,11 @@ endif
 
 let s:PlugWinSize = 25          " 插件窗口的宽度，如TagList,NERD_tree等，自己设置
 
-" 为leader快捷键 {{{
-let mapleader = ","  
-let g:mapleader = ","
-" }}} 
-
-" 设置快速保存和退出 {{{ 
-nmap <leader>s :w!<cr>       " 快速保存为,s  
-nmap <leader>w :wq!<cr>      " 快速退出（保存）为,w                     
-nmap <leader>q :q!<cr>       " 快速退出（不保存）为,q
-nmap <C-Z> :shell<cr>        " ^z快速进入shell
-
-" }}}
-
-" 缩写  {{{
-iab idate <c-r>=strftime("%Y-%m-%d")<CR>
-iab itime <c-r>=strftime("%H:%M")<CR>
-iab imail LiHuan <lhwork@hotmail.com>
-iab igmail lihuan1976@gmail.com
-iab iname Li Huan
-" }}}
-
-" 删除所有行未尾空格   {{{
-nmap <F12> :%s,\s\+$,,g<CR>
-" }}}
-
 " ==========================================================================================
 
 " Vim 界面  {{{
 set ruler                       " 设置标尺
-set cmdheight=2                 " 设置命令行的高度  
+set cmdheight=2                 " 设置命令行的高度
 set number                      " 显示行号
 set backspace=indent,eol,start  " 使回格键（backspace）正常处理indent, eol, start等
 set showmatch                   " 高亮显示匹配的括号
@@ -90,23 +67,62 @@ set pastetoggle=<F2>            " when in insert mode, press <F2> to go to
 " }}}
 
 " 状态栏设置 {{{
-set laststatus=2                " 开启状态栏 
+set laststatus=2                " 开启状态栏
 highlight StatusLine cterm=bold ctermfg=yellow ctermbg=blue
 
-function! CurDir()  
-    let curdir = substitute(getcwd(), $HOME, "~", "g")  
-    return curdir  
-endfunction 
+function! GetCurDir()
+    let curdir = substitute(getcwd(), $HOME, "~", "g")
+    return curdir
+endfunction
 
 set statusline=
-set statusline+=%f "path to the file in the buffer, relative to current directory
+set statusline+=\ [File]\ %f "path to the file in the buffer, relative to current directory
 set statusline+=\ %h%1*%m%r%w%0* " flag
 set statusline+=\ [%{strlen(&ft)?&ft:'none'}, " filetype
 set statusline+=%{&encoding}, " encoding
 set statusline+=%{&fileformat}] " file format
-set statusline+=\ CWD:%r%{CurDir()}%h
-set statusline+=\ Line:%l/%L
+set statusline+=\ [PWD]:%r%{GetCurDir()}%h
+set statusline+=\ %=\[Line]:%l/%L
+set statusline+=\ %=\[%P]
 "}}}
+
+" 字体和颜色  {{{
+syntax enable                               " 开启语法
+if has('gui_running')
+    "set guioptions=                         " 隐藏全部的gui选项
+    set guioptions-=T                       " 显示gui右边滚动条
+
+    set transparency=2                      " 设置背景透明度
+	colorscheme eclipse 	                " 配色方案
+    set lines=200
+    set columns=120
+    set cursorline                          " 高亮显示当前行
+    if has("gui_macvim")
+        set guifont=Monaco:h12              " 设置字体
+        " 使用 MacVim 原生的全屏幕功能
+        let s:lines=&lines
+        let s:columns=&columns
+        function! FullScreenEnter()
+            set lines=999 columns=999
+            set fu
+        endf
+
+        function! FullScreenLeave()
+            let &lines=s:lines
+            let &columns=s:columns
+            set nofu
+        endf
+
+        function! FullScreenToggle()
+            if &fullscreen
+                call FullScreenLeave()
+            else
+                call FullScreenEnter()
+            endif
+        endf
+    endif
+endif
+" }}}
 
 " 文字处理  {{{
 set tabstop=4                   " 1个tab，4个空格
@@ -115,8 +131,9 @@ set shiftwidth=4                " number of spaces to use for autoindenting
 set shiftround                  " use multiple of shiftwidth when indenting with '<' and '>'
 set expandtab                   " 用空格代替制表符
 set smarttab                    " 在行和段开始处使用制表符
-set linebreak                   " 整词换行
+set linebreak                   " 整词换行不被截断
 set undolevels=100              " 撤销
+set textwidth=80                " 设置每行80个字符自动换行，加上换行符
 " }}}
 
 " 缩进  {{{
@@ -126,26 +143,13 @@ set smartindent                 " 开启新行时使用智能自动缩进
 set nowrap                      " 不自动换行
 " }}}
 
-" 编码设置 {{{
+" 语言编码设置 {{{
 set encoding=utf8               " 设置编码
 set termencoding=utf-8
 set fileencodings=utf-8,GB2312,cp936,gb18030,big5,euc-jp,euc-kr,latin1      " 设置文件编码
-set fencs=utf-8,gbk
+set fencs=utf-8,gbk,chinese,latin1
 
 "}}}
-
-" 字体和颜色  {{{
-syntax enable                               " 开启语法
-if has('gui_running')
-	colorscheme eclipse 	                " 配色方案
-    set lines=40
-    set columns=100
-    set cursorline                          " 高亮显示当前行
-    if has("gui_mac") || has("gui_macvim")
-        set guifont=Monaco:h14              " 设置字体
-    endif    
-endif
-" }}}
 
 " 文件和备份  {{{
 set nobackup                    " 禁止生成临时文件
@@ -156,8 +160,43 @@ set noswapfile                  " 关闭交换文件
 set foldenable                  " 开始折叠
 set foldmethod=syntax           " 设置语法折叠
 set foldlevel=100               " 设置折叠层数
-set foldopen -=search " don't open folds when you search into them 
-set foldopen -=undo " don't open folds when you undo stuff 
+set foldopen -=search " don't open folds when you search into them
+set foldopen -=undo " don't open folds when you undo stuff
+" }}}
+
+" =============================
+" 快捷键
+" =============================
+
+" 为leader快捷键 {{{
+let mapleader = ","
+let g:mapleader = ","
+" }}}
+
+" Mac 下，按 \ff 切换全屏  {{{
+if has("gui_macvim")
+    map <Leader>ff  :call FullScreenToggle()<cr>
+endif
+" }}}
+
+" 设置快速保存和退出 {{{
+nmap <leader>s :w!<cr>       " 快速保存为,s
+nmap <leader>w :wq!<cr>      " 快速退出（保存）为,w
+nmap <leader>q :q!<cr>       " 快速退出（不保存）为,q
+nmap <C-Z> :shell<cr>        " ^z快速进入shell
+
+" }}}
+
+" 缩写  {{{
+iab idate <c-r>=strftime("%Y-%m-%d")<CR>
+iab itime <c-r>=strftime("%H:%M")<CR>
+iab imail LiHuan <lhwork@hotmail.com>
+iab igmail lihuan1976@gmail.com
+iab iname Li Huan
+" }}}
+
+" 删除所有行未尾空格   {{{
+nmap <leader><space> :%s,\s\+$,,g<cr>
 " }}}
 
 " 自动补全括号和引号  {{{
@@ -169,7 +208,6 @@ inoremap [ []<ESC>i
 inoremap ] <c-r>=ClosePair(']')<CR>
 inoremap < <><ESC>i
 inoremap > <c-r>=ClosePair('>')<CR>
-
 function ClosePair(char)
     if getline('.')[col('.') - 1] == a:char
         return "\<Right>"
@@ -180,8 +218,8 @@ endf
 " }}}
 
 " 拷贝粘贴    {{{
-vmap <C-c> y:call system("pbcopy", getreg("\""))<CR>
-nmap <C-v> :call setreg("\"",system("pbpaste"))<CR>p
+"vmap <C-c> y:call system("pbcopy", getreg("\""))<CR>
+"nmap <C-v> :call setreg("\"",system("pbpaste"))<CR>p
 " }}}
 
 " 用 */# 向 前/后 搜索光标下的单词   {{{
@@ -204,13 +242,18 @@ vnoremap <silent> # :call VisualSearch('b')<CR>
 " }}}
 
 " Buffers操作快捷方式    {{{
-nnoremap <C-RETURN> :bnext<CR>
-nnoremap <C-S-RETURN> :bprevious<CR>
+"nnoremap <C-RETURN> :bnext<CR>
+"nnoremap <C-S-RETURN> :bprevious<CR>
 " }}}
 
 " Tab操作快捷方式    {{{
-nnoremap <C-TAB> :tabnext<CR>
-nnoremap <C-S-TAB> :tabprev<CR>
+"nnoremap <C-TAB> :tabnext<CR>
+"nnoremap <C-S-TAB> :tabprev<CR>
+" }}}
+
+" vimrc 文件    {{{
+map <silent> <leader>ee :e ~/.vimrc<cr>                 " 快速修改 vimrc 文件
+map <silent> <leader>rc :source ~/.vimrc<cr>            " 快速载入 vimrc 文件
 " }}}
 
 "关于tab的快捷键
@@ -229,18 +272,18 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
 " 在输入模式下移动光标，彻底抛弃方向键
-inoremap <C-h> <left>
-inoremap <C-j> <C-o>gj
-inoremap <C-k> <C-o>gk
-inoremap <C-l> <Right>
-inoremap <M-h> <C-o>b
-inoremap <M-l> <C-o>w
-inoremap <C-a> <Home>
-inoremap <C-e> <End>
+"inoremap <C-h> <left>
+"inoremap <C-j> <C-o>gj
+"inoremap <C-k> <C-o>gk
+"inoremap <C-l> <Right>
+"inoremap <M-h> <C-o>b
+"inoremap <M-l> <C-o>w
+"inoremap <C-a> <Home>
+"inoremap <C-e> <End>
 
 " 修改文件格式 （set fileformats=unix,dos,mac）{{{
-" nmap <leader>fd :se fileformat=dos<CR>
-" nmap <leader>fu :se fileformat=unix<CR>         
+" nmap <leader>fd :set fileformat=dos<CR>
+" nmap <leader>fu :set fileformat=unix<CR>
 " }}}
 
 " use Ctrl+[l|n|p|cc] to list|next|previous|jump to count the result
@@ -248,6 +291,17 @@ inoremap <C-e> <End>
 " map <C-x>n <ESC>:cn<CR>
 " map <C-x>p <ESC>:cp<CR>
 " map <C-x>c <ESC>:cc<CR>
+
+if has("autocmd")
+    augroup vimrcEx " 记住上次文件位置
+        au!
+        autocmd FileType text setlocal textwidth=80
+        autocmd BufReadPost *
+                    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+                    \   exe "normal g`\"" |
+                    \ endif
+    augroup END
+endif
 
 " Python 文件的一般设置，比如不要 tab 等    {{{
 autocmd FileType python set tabstop=4 shiftwidth=4 expandtab
@@ -269,7 +323,7 @@ let g:pydiction_location = '~/.vim/tools/pydiction/complete-dict'
 nmap <silent> <leader>t :TlistToggle<cr>
 let Tlist_Ctags_Cmd = '/usr/bin/ctags'
 let Tlist_Show_One_File = 1             " 不同时显示多个文件的tag，只显示当前文件的
-let Tlist_Exit_OnlyWindow = 1           " 如果taglist窗口是最后一个窗口，则退出vim 
+let Tlist_Exit_OnlyWindow = 1           " 如果taglist窗口是最后一个窗口，则退出vim
 let Tlist_Use_Right_Window = 1          " 在右侧窗口中显示taglist窗口
 let Tlist_File_Fold_Auto_Close = 1      " 自动折叠当前非编辑文件的方法列
 let Tlist_GainFocus_On_ToggleOpen = 0
@@ -282,7 +336,7 @@ let Tlist_Close_On_Select = 0
 " NerdTree 插件  以树状方式浏览系统中的文件和目录  {{{
 let NERDTreeShowHidden = 1
 let NERDTreeWinPos = "left"
-let NERDTreeWinSize = s:PlugWinSize 
+let NERDTreeWinSize = s:PlugWinSize
 " map <F3> :NERDTreeToggle<CR>
 nmap <leader>n :NERDTreeToggle<cr>
 " }}}
@@ -300,3 +354,24 @@ map <leader>cu ,cu
 nnoremap <F5> :GundoToggle<CR>
 " }}}
 
+" BufExplorer 快捷键    {{{
+nmap <C-e> :BufExplorer<cr>
+nmap <f2>  :BufExplorer<cr>
+" }}}
+
+" MiniBufExplorer    {{{
+let g:miniBufExplMapWindowNavVim = 1
+let g:miniBufExplMapWindowNavArrows = 1
+let g:miniBufExplMapCTabSwitchBufs = 1
+let g:miniBufExplModSelTarget = 1
+" }}}
+
+" snipmate    {{{
+ino <c-j> <c-r>=TriggerSnippet()<cr>
+snor <c-j> <esc>i<right><c-r>=TriggerSnippet()<cr>
+" }}}
+
+" Grep    {{{
+"nnoremap <silent> <F3> :Grep<CR>
+nmap <c-g> :Grep<cr>
+" }}}
