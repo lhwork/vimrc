@@ -193,6 +193,7 @@ iab itime <c-r>=strftime("%H:%M")<CR>
 iab imail LiHuan <lhwork@hotmail.com>
 iab igmail lihuan1976@gmail.com
 iab iname Li Huan
+iab icoding # -*- coding: UTF-8 -*-
 " }}}
 
 " 删除所有行未尾空格   {{{
@@ -305,10 +306,10 @@ endif
 
 " Python 文件的一般设置，比如不要 tab 等    {{{
 autocmd FileType python set tabstop=4 shiftwidth=4 expandtab
-autocmd FileType python map <F12> :!python %<CR>
+autocmd FileType python map <F7> :!python %<CR>
 autocmd FileType python map <buffer> <F3> :call Pep8()<CR>
 autocmd FileType python map <buffer> <F4> :call Pyflakes()<CR>
-autocmd BufWritePost *.py call Pyflakes()
+"autocmd BufWritePost *.py call Pyflakes()
 " }}}
 
 " vim 自动补全 Python 代码  {{{
@@ -360,10 +361,13 @@ nmap <f2>  :BufExplorer<cr>
 " }}}
 
 " MiniBufExplorer    {{{
-let g:miniBufExplMapWindowNavVim = 1
-let g:miniBufExplMapWindowNavArrows = 1
-let g:miniBufExplMapCTabSwitchBufs = 1
-let g:miniBufExplModSelTarget = 1
+let loaded_minibufexplorer = 0
+if !has("gui_macvim")
+    let g:miniBufExplMapWindowNavVim = 1
+    let g:miniBufExplMapWindowNavArrows = 1
+    let g:miniBufExplMapCTabSwitchBufs = 1
+    let g:miniBufExplModSelTarget = 1
+endif
 " }}}
 
 " snipmate    {{{
@@ -375,3 +379,8 @@ snor <c-j> <esc>i<right><c-r>=TriggerSnippet()<cr>
 "nnoremap <silent> <F3> :Grep<CR>
 nmap <c-g> :Grep<cr>
 " }}}
+
+" pydoc    {{{
+let g:pydoc_open_cmd = "vsplit"
+let g:pydoc_highlight=0
+" }}} 
