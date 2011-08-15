@@ -201,6 +201,14 @@ nmap <leader><space> :%s,\s\+$,,g<cr>
 " }}}
 
 " 自动补全括号和引号  {{{
+function! ClosePair(char)
+    if getline('.')[col('.') - 1] == a:char
+        return "\<Right>"
+    else
+        return a:char
+    endif
+endfunction
+
 inoremap ( ()<ESC>i
 inoremap ) <c-r>=ClosePair(')')<CR>
 inoremap { {}<ESC>i
@@ -209,14 +217,6 @@ inoremap [ []<ESC>i
 inoremap ] <c-r>=ClosePair(']')<CR>
 inoremap < <><ESC>i
 inoremap > <c-r>=ClosePair('>')<CR>
-function ClosePair(char)
-    if getline('.')[col('.') - 1] == a:char
-        return "\<Right>"
-    else
-        return a:char
-    endif
-endf
-" }}}
 
 " 拷贝粘贴    {{{
 "vmap <C-c> y:call system("pbcopy", getreg("\""))<CR>
@@ -384,3 +384,7 @@ nmap <c-g> :Grep<cr>
 let g:pydoc_open_cmd = "vsplit"
 let g:pydoc_highlight=0
 " }}} 
+
+" Markdown    {{{
+autocmd BufNewFile,BufRead *.rst set filetype=mkd
+" }}}

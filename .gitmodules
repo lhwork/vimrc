@@ -28,3 +28,6 @@
 [submodule "vim/bundle/pydoc"]
 	path = vim/bundle/pydoc
 	url = https://github.com/fs111/pydoc.vim
+[submodule "vim/bundle/vim-markdown"]
+	path = vim/bundle/vim-markdown
+	url = https://github.com/plasticboy/vim-markdown

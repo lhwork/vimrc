@@ -1,7 +1,8 @@
 Readme
+======
 
 Network Installation
-====================
+--------------------
 
 Run this scripts to install::
 
@@ -9,7 +10,7 @@ Run this scripts to install::
 
 
 Local Installation
-==================
+------------------
     
 1. Clone this repo::
 
