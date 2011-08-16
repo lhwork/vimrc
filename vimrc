@@ -255,6 +255,7 @@ vnoremap <silent> # :call VisualSearch('b')<CR>
 " vimrc 文件    {{{
 map <silent> <leader>ee :e ~/.vimrc<cr>                 " 快速修改 vimrc 文件
 map <silent> <leader>rc :source ~/.vimrc<cr>            " 快速载入 vimrc 文件
+autocmd! BufWritePost *vimrc source ~/.vimrc      " 编辑后自动重新加载
 " }}}
 
 "关于tab的快捷键
@@ -293,23 +294,21 @@ nnoremap <C-l> <C-w>l
 " map <C-x>p <ESC>:cp<CR>
 " map <C-x>c <ESC>:cc<CR>
 
-if has("autocmd")
-    augroup vimrcEx " 记住上次文件位置
-        au!
-        autocmd FileType text setlocal textwidth=80
-        autocmd BufReadPost *
-                    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-                    \   exe "normal g`\"" |
-                    \ endif
-    augroup END
-endif
-
-" Python 文件的一般设置，比如不要 tab 等    {{{
+" 文件的一般设置    {{{
+autocmd BufWrite *.php,*.py,*.yaml,*.html,*.htm,*.css,*.js :%retab
+autocmd BufWrite *.* :set fileformat=unix
 autocmd FileType python set tabstop=4 shiftwidth=4 expandtab
 autocmd FileType python map <F7> :!python %<CR>
 autocmd FileType python map <buffer> <F3> :call Pep8()<CR>
 autocmd FileType python map <buffer> <F4> :call Pyflakes()<CR>
 "autocmd BufWritePost *.py call Pyflakes()
+" }}}
+
+" 保存文件最后编辑位置   {{{
+autocmd BufReadPost *
+            \ if line("'\"") > 0 && line("'\"") <= line("$") |
+            \   exe "normal! g`\"" |
+            \ endif
 " }}}
 
 " vim 自动补全 Python 代码  {{{
@@ -387,4 +386,6 @@ let g:pydoc_highlight=0
 
 " Markdown    {{{
 autocmd BufNewFile,BufRead *.rst set filetype=mkd
+autocmd BufNewFile,BufRead *.mkd,*.md,*.markdown,*.rst set ai formatoptions=tcronqn2 comments=n:>
 " }}}
+
