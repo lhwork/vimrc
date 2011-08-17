@@ -14,6 +14,7 @@ filetype indent on              " 为特定文件类型载入相关缩进文件
 
 set nocompatible                " 关掉兼容模式
 syntax on                       " 语法高亮
+syntax enable                   " 开启语法
 set mouse=a                     " 可以在buffer的任何地方使用鼠标（类似office中在工作区双击鼠标定位）
 set fileformats="unix,dos,mac"
 set formatoptions+=1            " When wrapping paragraphs, don't end lines
@@ -48,18 +49,17 @@ set cmdheight=2                 " 设置命令行的高度
 set number                      " 显示行号
 set backspace=indent,eol,start  " 使回格键（backspace）正常处理indent, eol, start等
 set showmatch                   " 高亮显示匹配的括号
-set showmode                    " always show what mode we're currently editing in
 set confirm                     " 在处理未保存或只读文件的时候，弹出确认
 set scrolloff=4                 " 光标移动到buffer的顶部和底部时保持3行距离
 set virtualedit=all             " allow the cursor to go in to "invalid" places
-set ignorecase                  "搜索忽略大小写
+set ignorecase                  " 搜索忽略大小写
 set smartcase                   " ignore case if search pattern is all lowercase,
-set hlsearch                    "搜索逐字符高亮
-set incsearch                   " show search matches as you type
-set gdefault                    "行内替换
-set pastetoggle=<F2>            " when in insert mode, press <F2> to go to
-                                "    paste mode, where you can paste mass data
-                                "    that won't be autoindented
+set hlsearch                    " 搜索时高亮显示被找到的文本
+set incsearch                   " 输入搜索内容时就显示搜索结果
+set noerrorbells                " 关闭错误信息响铃
+set novisualbell                " 关闭使用可视响铃代替呼叫
+set gdefault                    " 行内替换
+set cursorline                  " 高亮显示当前行
 " }}}
 
 " 状态栏设置 {{{
@@ -83,14 +83,12 @@ set statusline+=\ %=\[%P]
 "}}}
 
 " 字体和颜色  {{{
-syntax enable                               " 开启语法
 if has('gui_running')
     set guioptions-=T                       " 显示gui右边滚动条
     set transparency=2                      " 设置背景透明度
 	colorscheme eclipse 	                " 配色方案
     set lines=200
     set columns=120
-    set cursorline                          " 高亮显示当前行
     if has("gui_macvim")
         set guifont=Monaco:h12              " 设置字体
         " 使用 MacVim 原生的全屏幕功能
@@ -114,6 +112,7 @@ if has('gui_running')
                 call FullScreenEnter()
             endif
         endf
+        autocmd BufRead * set nohls
     endif
 endif
 " }}}
@@ -154,8 +153,10 @@ set noswapfile                  " 关闭交换文件
 set foldenable                  " 开始折叠
 set foldmethod=syntax           " 设置语法折叠
 set foldlevel=100               " 设置折叠层数
-set foldopen -=search " don't open folds when you search into them
-set foldopen -=undo " don't open folds when you undo stuff
+set foldopen-=search            " don't open folds when you search into them
+set foldopen-=undo              " don't open folds when you undo stuff
+" set foldclose=all             " 设置为自动关闭折叠
+" nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>        " 用空格键来开关折叠
 " }}}
 
 " =============================
@@ -252,7 +253,7 @@ vnoremap <silent> # :call VisualSearch('b')<CR>
 " vimrc 文件    {{{
 map <silent> <leader>ee :e ~/.vimrc<cr>                 " 快速修改 vimrc 文件
 map <silent> <leader>rc :source ~/.vimrc<cr>            " 快速载入 vimrc 文件
-autocmd! BufWritePost *vimrc source ~/.vimrc      " 编辑后自动重新加载
+autocmd BufWritePost *vimrc source ~/.vimrc      " 编辑后自动重新加载
 " }}}
 
 "关于tab的快捷键
