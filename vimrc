@@ -9,6 +9,8 @@ filetype off
 call pathogen#helptags()
 call pathogen#runtime_append_all_bundles()
 filetype plugin indent on
+filetype plugin on              " 载入文件类型插件
+filetype indent on              " 为特定文件类型载入相关缩进文件
 
 set nocompatible                " 关掉兼容模式
 syntax on                       " 语法高亮
@@ -32,14 +34,8 @@ set selectmode=mouse,key
 set complete=.,w,b,k,t,i        " 自动完成
 set completeopt=longest,menu    " 只在下拉菜单中显示匹配项目，并且会自动插入所有匹配项目的相同文本
 
-filetype plugin on              " 载入文件类型插件
-filetype indent on              " 为特定文件类型载入相关缩进文件
-
 " 显示Tab符   {{{
 set listchars=tab:\|\ ,trail:.,extends:>,precedes:<
-if has("autocmd")
-   autocmd filetype javascript,php,python set list
-endif
 " }}}
 
 let s:PlugWinSize = 25          " 插件窗口的宽度，如TagList,NERD_tree等，自己设置
@@ -89,9 +85,7 @@ set statusline+=\ %=\[%P]
 " 字体和颜色  {{{
 syntax enable                               " 开启语法
 if has('gui_running')
-    "set guioptions=                         " 隐藏全部的gui选项
     set guioptions-=T                       " 显示gui右边滚动条
-
     set transparency=2                      " 设置背景透明度
 	colorscheme eclipse 	                " 配色方案
     set lines=200
@@ -138,7 +132,7 @@ set textwidth=80                " 设置每行80个字符自动换行，加上�
 
 " 缩进  {{{
 set autoindent                  " 自动缩进
-"set copyindent                  " copy the previous indentation on autoindenting
+set copyindent                  " copy the previous indentation on autoindenting
 set smartindent                 " 开启新行时使用智能自动缩进
 set nowrap                      " 不自动换行
 " }}}
@@ -173,20 +167,6 @@ let mapleader = ","
 let g:mapleader = ","
 " }}}
 
-" Mac 下，按 \ff 切换全屏  {{{
-if has("gui_macvim")
-    map <Leader>ff  :call FullScreenToggle()<cr>
-endif
-" }}}
-
-" 设置快速保存和退出 {{{
-nmap <leader>s :w!<cr>       " 快速保存为,s
-nmap <leader>w :wq!<cr>      " 快速退出（保存）为,w
-nmap <leader>q :q!<cr>       " 快速退出（不保存）为,q
-nmap <C-Z> :shell<cr>        " ^z快速进入shell
-
-" }}}
-
 " 缩写  {{{
 iab idate <c-r>=strftime("%Y-%m-%d")<CR>
 iab itime <c-r>=strftime("%H:%M")<CR>
@@ -198,6 +178,23 @@ iab icoding # -*- coding: UTF-8 -*-
 
 " 删除所有行未尾空格   {{{
 nmap <leader><space> :%s,\s\+$,,g<cr>
+" }}}
+
+" 删除行尾^M   {{{
+nmap <leader>mm :%s:\r::<cr>
+" }}}
+
+" 设置快速保存和退出 {{{
+nmap <leader>s :w!<cr>       " 快速保存为,s
+nmap <leader>w :wq!<cr>      " 快速退出（保存）为,w
+nmap <leader>q :q!<cr>       " 快速退出（不保存）为,q
+nmap <C-Z> :shell<cr>        " ^z快速进入shell
+" }}}
+
+" Mac 下，按 \ff 切换全屏  {{{
+if has("gui_macvim")
+    map <Leader>ff  :call FullScreenToggle()<cr>
+endif
 " }}}
 
 " 自动补全括号和引号  {{{
@@ -297,19 +294,19 @@ nnoremap <C-l> <C-w>l
 " 文件的一般设置    {{{
 autocmd BufWrite *.php,*.py,*.yaml,*.html,*.htm,*.css,*.js :%retab
 autocmd BufWrite *.* :set fileformat=unix
+autocmd FileType javascript,php,python set list
 autocmd FileType python set tabstop=4 shiftwidth=4 expandtab
 autocmd FileType python map <F7> :!python %<CR>
 autocmd FileType python map <buffer> <F3> :call Pep8()<CR>
 autocmd FileType python map <buffer> <F4> :call Pyflakes()<CR>
 "autocmd BufWritePost *.py call Pyflakes()
+" 保存文件最后编辑位置
+autocmd BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \   exe "normal! g`\"" |
+        \ endif
 " }}}
 
-" 保存文件最后编辑位置   {{{
-autocmd BufReadPost *
-            \ if line("'\"") > 0 && line("'\"") <= line("$") |
-            \   exe "normal! g`\"" |
-            \ endif
-" }}}
 
 " vim 自动补全 Python 代码  {{{
 "pydiction 1.2 python auto complete
