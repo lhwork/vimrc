@@ -307,7 +307,8 @@ autocmd BufReadPost *
         \   exe "normal! g`\"" |
         \ endif
 " }}}
-
+" 退出insert模式时自动保存
+autocmd InsertLeave * write
 
 " vim 自动补全 Python 代码  {{{
 "pydiction 1.2 python auto complete
