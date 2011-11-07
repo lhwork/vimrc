@@ -89,6 +89,7 @@ if has('gui_running')
 	colorscheme eclipse 	                " 配色方案
     set lines=200
     set columns=120
+    set nohls
     if has("gui_macvim")
         set guifont=Monaco:h12              " 设置字体
         " 使用 MacVim 原生的全屏幕功能
@@ -112,7 +113,6 @@ if has('gui_running')
                 call FullScreenEnter()
             endif
         endf
-        autocmd BufRead * set nohls
     endif
 endif
 " }}}
@@ -126,7 +126,7 @@ set expandtab                   " 用空格代替制表符
 set smarttab                    " 在行和段开始处使用制表符
 set linebreak                   " 整词换行不被截断
 set undolevels=100              " 撤销
-set textwidth=80                " 设置每行80个字符自动换行，加上换行符
+set textwidth=120                " 设置每行80个字符自动换行，加上换行符
 " }}}
 
 " 缩进  {{{
@@ -308,7 +308,11 @@ autocmd BufReadPost *
         \ endif
 " }}}
 " 退出insert模式时自动保存
-autocmd InsertLeave * write
+"autocmd InsertLeave * write
+
+" 代码长度检测
+autocmd BufRead,BufNewFile *.c,*.cpp,*.py match Error /\%120v.\%121v./
+"autocmd BufRead,BufNewFile *.c,*.cpp,*.py 2match Underlined /.\%81v/
 
 " vim 自动补全 Python 代码  {{{
 "pydiction 1.2 python auto complete
