@@ -33,4 +33,4 @@
 	url = https://github.com/plasticboy/vim-markdown
 [submodule "vim/bundle/vimerl"]
 	path = vim/bundle/vimerl
-	url = git://github.com/oscarh/vimerl.git
+	url = git://github.com/jimenezrick/vimerl.git
