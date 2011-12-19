@@ -130,9 +130,10 @@ set textwidth=120                " 设置每行80个字符自动换行，加上�
 " }}}
 
 " 缩进  {{{
-set autoindent                  " 自动缩进
-set copyindent                  " copy the previous indentation on autoindenting
-set smartindent                 " 开启新行时使用智能自动缩进
+set cindent
+"set autoindent                  " 自动缩进
+"set copyindent                  " copy the previous indentation on autoindenting
+"set smartindent                 " 开启新行时使用智能自动缩进
 set nowrap                      " 不自动换行
 " }}}
 
@@ -199,22 +200,38 @@ endif
 " }}}
 
 " 自动补全括号和引号  {{{
-function! ClosePair(char)
-    if getline('.')[col('.') - 1] == a:char
-        return "\<Right>"
-    else
-        return a:char
-    endif
-endfunction
-
 inoremap ( ()<ESC>i
 inoremap ) <c-r>=ClosePair(')')<CR>
 inoremap { {}<ESC>i
 inoremap } <c-r>=ClosePair('}')<CR>
 inoremap [ []<ESC>i
 inoremap ] <c-r>=ClosePair(']')<CR>
-inoremap < <><ESC>i
-inoremap > <c-r>=ClosePair('>')<CR>
+inoremap < <C-R>=AddPair('<')<CR>
+inoremap > <c-r>=ClosePairHtml('>')<CR>
+
+fun! AddPair(char)
+    if &syntax == 'html' || &syntax == 'xhtml' || &syntax == 'vim'
+        return "<>\<LEFT>"
+    else
+        return '<'
+    endif
+endf
+
+fun! ClosePair(char)
+    if getline('.')[col('.') - 1] == a:char
+        return "\<Right>"
+    else
+        return a:char
+    endif
+endf
+
+fun! ClosePairHtml(char)
+    if &syntax == 'html' || &syntax == 'xhtml' || &syntax == 'vim'
+        return ClosePair(a:char)
+    else
+        return a:char
+    endif
+endf
 
 " 拷贝粘贴    {{{
 "vmap <C-c> y:call system("pbcopy", getreg("\""))<CR>
