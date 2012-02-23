@@ -409,3 +409,11 @@ autocmd BufNewFile,BufRead *.rst set filetype=mkd
 autocmd BufNewFile,BufRead *.mkd,*.md,*.markdown,*.rst set ai formatoptions=tcronqn2 comments=n:>
 " }}}
 
+" ctrlp     {{{
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_working_path_mode = 2
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.so     " Linux/MacOSX
+let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
+let g:ctrlp_user_command = 'find %s -type f'       " MacOSX/Linux
+" }}}
+

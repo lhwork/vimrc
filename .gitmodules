@@ -31,3 +31,6 @@
 [submodule "vim/bundle/vimerl"]
 	path = vim/bundle/vimerl
 	url = git://github.com/jimenezrick/vimerl.git
+[submodule "vim/bundle/ctrlp"]
+	path = vim/bundle/ctrlp
+	url = git://github.com/kien/ctrlp.vim.git
