@@ -417,3 +417,6 @@ let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
 let g:ctrlp_user_command = 'find %s -type f'       " MacOSX/Linux
 " }}}
 
+" Tabular   {{{
+" }}} 
+
