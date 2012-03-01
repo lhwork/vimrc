@@ -420,3 +420,8 @@ let g:ctrlp_user_command = 'find %s -type f'       " MacOSX/Linux
 " Tabular   {{{
 " }}} 
 
+" Zen Coding    {{{
+let g:user_zen_expandabbr_key = '<c-e>' 
+let g:use_zen_complete_tag = 1
+" }}}
+
