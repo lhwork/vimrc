@@ -152,12 +152,14 @@ set noswapfile                  " 关闭交换文件
 
 " 折叠 {{{
 set foldenable                  " 开始折叠
+set foldcolumn=2                " add a fold column
 set foldmethod=syntax           " 设置语法折叠
-set foldlevel=100               " 设置折叠层数
+"set foldmethod=marker           " detect triple-{ style fold markers}
+set foldlevelstart=0            " 设置折叠层数
 set foldopen-=search            " don't open folds when you search into them
 set foldopen-=undo              " don't open folds when you undo stuff
 " set foldclose=all             " 设置为自动关闭折叠
-" nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>        " 用空格键来开关折叠
+nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>        " 用空格键来开关折叠
 " }}}
 
 " =============================
@@ -428,3 +430,18 @@ let g:use_zen_complete_tag = 1
 " tagbar    {{{
 nmap <F8> :TagbarToggle<CR>
 " }}}
+
+"{{{补全功能
+" 自动补全
+"filetype plugin indent on
+set completeopt=longest,menu
+"自动补全命令时候使用菜单式匹配列表
+set wildmenu
+autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
+autocmd FileType python set omnifunc=pythoncomplete#Complete
+autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
+autocmd FileType java set omnifunc=javacomplete#Complet
+"}}}
