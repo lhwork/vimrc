@@ -341,7 +341,7 @@ let g:pydiction_location = '~/.vim/tools/pydiction/complete-dict'
 " Tag list (ctags)  {{{
 " <leader>t 打开TagList窗口，窗口在右边
 nmap <silent> <leader>t :TlistToggle<cr>
-let Tlist_Ctags_Cmd = '/usr/bin/ctags'
+let Tlist_Ctags_Cmd = '/opt/local/bin/ctags'
 let Tlist_Show_One_File = 1             " 不同时显示多个文件的tag，只显示当前文件的
 let Tlist_Exit_OnlyWindow = 1           " 如果taglist窗口是最后一个窗口，则退出vim
 let Tlist_Use_Right_Window = 1          " 在右侧窗口中显示taglist窗口
@@ -425,3 +425,6 @@ let g:user_zen_expandabbr_key = '<c-e>'
 let g:use_zen_complete_tag = 1
 " }}}
 
+" tagbar    {{{
+nmap <F8> :TagbarToggle<CR>
+" }}}
