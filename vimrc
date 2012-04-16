@@ -88,10 +88,10 @@ if has('gui_running')
     set transparency=2                      " 设置背景透明度
 	colorscheme eclipse 	                " 配色方案
     set lines=200
-    set columns=120
+    set columns=140
     set nohls
     if has("gui_macvim")
-        set guifont=Monaco:h12              " 设置字体
+        set guifont=Monaco:h14              " 设置字体
         " 使用 MacVim 原生的全屏幕功能
         let s:lines=&lines
         let s:columns=&columns
@@ -151,15 +151,15 @@ set noswapfile                  " 关闭交换文件
 " }}}
 
 " 折叠 {{{
-set foldenable                  " 开始折叠
-set foldcolumn=2                " add a fold column
-set foldmethod=syntax           " 设置语法折叠
+"set foldenable                  " 开始折叠
+"set foldcolumn=4                " add a fold column
+"set foldmethod=syntax           " 设置语法折叠
 "set foldmethod=marker           " detect triple-{ style fold markers}
-set foldlevelstart=0            " 设置折叠层数
-set foldopen-=search            " don't open folds when you search into them
-set foldopen-=undo              " don't open folds when you undo stuff
-" set foldclose=all             " 设置为自动关闭折叠
-nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>        " 用空格键来开关折叠
+"set foldlevelstart=0            " 设置折叠层数
+"set foldopen-=search            " don't open folds when you search into them
+"set foldopen-=undo              " don't open folds when you undo stuff
+"set foldclose=all             " 设置为自动关闭折叠
+"nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>        " 用空格键来开关折叠
 " }}}
 
 " =============================
@@ -238,25 +238,6 @@ endf
 " 拷贝粘贴    {{{
 "vmap <C-c> y:call system("pbcopy", getreg("\""))<CR>
 "nmap <C-v> :call setreg("\"",system("pbpaste"))<CR>p
-" }}}
-
-" 用 */# 向 前/后 搜索光标下的单词   {{{
-" 根据给定方向搜索当前光标下的单词，结合下面两个绑定使用
-function! VisualSearch(direction) range
-    let l:saved_reg = @"
-    execute "normal! vgvy"
-    let l:pattern = escape(@", '\\/.*$^~[]')
-    let l:pattern = substitute(l:pattern, "\n$", "", "")
-    if a:direction == 'b'
-        execute "normal ?" . l:pattern . "<cr>"
-    else
-        execute "normal /" . l:pattern . "<cr>"
-    endif
-    let @/ = l:pattern
-    let @" = l:saved_reg
-endfunction
-vnoremap <silent> * :call VisualSearch('f')<CR>
-vnoremap <silent> # :call VisualSearch('b')<CR>
 " }}}
 
 " Buffers操作快捷方式    {{{
