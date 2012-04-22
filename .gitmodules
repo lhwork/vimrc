@@ -49,3 +49,6 @@
 [submodule "vim/bundle/c"]
 	path = vim/bundle/c
 	url = git://github.com/vim-scripts/c.vim.git
+[submodule "vim/bundle/bash"]
+	path = vim/bundle/bash
+	url = git://github.com/vim-scripts/bash-support.vim.git
